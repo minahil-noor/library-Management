@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Library Management</title>
+    <style>
+        /* Reset */
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif;}
+        body {background:#f4f7f8; color:#333;}
+
+        /* Header */
+        header {background:#1e3d59; color:#fff; padding:20px 0;}
+        header h1 {margin-left:20px; display:inline-block;}
+        nav {float:right; margin-right:20px;}
+        nav a {color:#fff; text-decoration:none; margin-left:20px; transition:0.3s;}
+        nav a:hover {color:#ff6e40;}
+
+        /* Section */
+        .section {padding:60px 20px; text-align:center;}
+        .section h2 {font-size:2rem; margin-bottom:20px;}
+
+        /* Stats Cards */
+        .stats {display:flex; justify-content:center; gap:20px; flex-wrap:wrap;}
+        .card {background:#ff6e40; color:#fff; padding:20px 40px; border-radius:10px; transition:0.3s;}
+        .card:hover {transform:translateY(-5px);}
+
+        /* Books List */
+        .books-list {display:flex; flex-wrap:wrap; gap:20px; justify-content:center; margin-top:20px;}
+        .book-card {background:#fff; padding:15px 20px; border-radius:10px; width:200px; box-shadow:0 4px 6px rgba(0,0,0,0.1); transition:0.3s;}
+        .book-card:hover {transform:translateY(-5px);}
+        .book-card button {margin-top:10px; padding:5px 10px; background:#1e3d59; color:#fff; border:none; border-radius:5px; cursor:pointer; transition:0.3s;}
+        .book-card button:hover {background:#ff6e40;}
+
+        /* Form */
+        form {display:flex; flex-direction:column; align-items:center; gap:15px;}
+        form input {padding:10px; width:300px; border-radius:5px; border:1px solid #ccc;}
+        form button {padding:10px 20px; background:#1e3d59; color:#fff; border:none; border-radius:5px; cursor:pointer; transition:0.3s;}
+        form button:hover {background:#ff6e40;}
+
+        /* Footer */
+        footer {background:#1e3d59; color:#fff; padding:15px 0; text-align:center; margin-top:50px;}
+
+        /* Responsive */
+        @media(max-width:768px){
+            nav {float:none; text-align:center; margin:10px 0 0;}
+            form input {width:90%;}
+            .stats {flex-direction:column;}
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div>
+            <h1>?? Premium Library</h1>
+            <nav>
+                <a href="#dashboard">Dashboard</a>
+                <a href="#books">Books</a>
+                <a href="#addBook">Add Book</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="section">
+        <h2>Dashboard</h2>
+        <div class="stats">
+            <div class="card">
+                <h3 id="totalBooks">0</h3>
+                <p>Total Books</p>
+            </div>
+            <div class="card">
+                <h3 id="totalMembers">0</h3>
+                <p>Total Members</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Books -->
+    <section id="books" class="section">
+        <h2>Books Catalog</h2>
+        <input type="text" id="searchBook" placeholder="Search Book...">
+        <div id="booksList" class="books-list"></div>
+    </section>
+
+    <!-- Add Book -->
+    <section id="addBook" class="section">
+        <h2>Add New Book</h2>
+        <form id="bookForm">
+            <input type="text" id="title" placeholder="Book Title" required>
+            <input type="text" id="author" placeholder="Author Name" required>
+            <input type="number" id="year" placeholder="Year" required>
+            <button type="submit">Add Book</button>
+        </form>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section">
+        <h2>Contact</h2>
+        <p>Email: admin@premiumlibrary.com</p>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Premium Library. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // JS Code
+        let books = [];
+        const bookForm = document.getElementById('bookForm');
+        const booksList = document.getElementById('booksList');
+        const totalBooks = document.getElementById('totalBooks');
+        const searchBook = document.getElementById('searchBook');
+
+        // Add Book
+        bookForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            const year = document.getElementById('year').value;
+
+            const book = { title, author, year };
+            books.push(book);
+            displayBooks(books);
+            bookForm.reset();
+        });
+
+        // Display Books
+        function displayBooks(bookArray){
+            booksList.innerHTML = '';
+            totalBooks.textContent = bookArray.length;
+            bookArray.forEach((book,index)=>{
+                const bookCard = document.createElement('div');
+                bookCard.classList.add('book-card');
+                bookCard.innerHTML = `
+                    <h3>${book.title}</h3>
+                    <p>Author: ${book.author}</p>
+                    <p>Year: ${book.year}</p>
+                    <button onclick="removeBook(${index})">Remove</button>
+                `;
+                booksList.appendChild(bookCard);
+            });
+        }
+
+        // Remove Book
+        function removeBook(index){
+            books.splice(index,1);
+            displayBooks(books);
+        }
+
+        // Search Book
+        searchBook.addEventListener('input',()=>{
+            const query = searchBook.value.toLowerCase();
+            const filtered = books.filter(book => book.title.toLowerCase().includes(query));
+            displayBooks(filtered);
+        });
+    </script>
+</body>
+</html>
